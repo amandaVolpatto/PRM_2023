@@ -1,9 +1,10 @@
-import TopicCardBoby from "../TopicCardBody";
-import TopicCardHeader from "../TopicCardHeader";
+import { ITopic } from "../../@types";
 import TopicCardActions from "../TopicCardActions";
+import TopicCardBody from "../TopicCardBody";
+import TopicCardHeader from "../TopicCardHeader";
 
 type TopicCardProps = {
-    topic: AnalyserNode
+    topic: ITopic
 }
 
 function TopicCard({
@@ -11,9 +12,12 @@ function TopicCard({
 }: TopicCardProps) {
     return (
         <div id="topic-card">
-            <TopicCardHeader />
-            <TopicCardBoby />
-            <TopicCardActions />
+            <TopicCardHeader 
+                createdAt={topic.createdAt}
+                owner={topic.owner}
+             />
+            <TopicCardBody content={topic.content} />
+            <TopicCardActions topic={topic} />
         </div>
     )
 }

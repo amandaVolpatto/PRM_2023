@@ -1,5 +1,5 @@
 export class ApplicationException extends Error {
-    statusCode : number;
+    statusCode: number;
     message: string;
 
     constructor(message: string, statusCode: number = 500) {

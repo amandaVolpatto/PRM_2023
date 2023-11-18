@@ -1,45 +1,59 @@
-import { Topic } from "src/entities/topic.entity";
-import { Repository } from "typeorm";
-import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Topic } from "src/entities/topic.entity";
+import { User } from "src/entities/user.entity";
 import { ApplicationException } from "src/exceptions";
+import { Repository } from "typeorm";
 
 @Injectable()
-export class TopicService { 
+export class TopicService {
 
     constructor(
         @InjectRepository(Topic)
-        private readonly repository: Repository<Topic>
-    ) { }
+        private readonly repository: Repository<Topic>,
+    ) {}
 
     findAll(): Promise<Topic[]> {
-        return this.repository.find();
+        return this.repository.find({
+            order: {
+                id: 'DESC'
+            }
+        });
     }
-
-    findById(id: number): Promise<Topic>{
-        return this.repository.findOneBy({id:id})
-
+    findById(id: number): Promise<Topic> {
+        return this.repository.findOneBy({ id: id });
     }
-
-    create (topic: Topic): Promise<Topic>{
+    findByUser(user: User): Promise<Topic[]> {
+        return this.repository.find({
+            where: {
+                owner: {
+                    id: user.id
+                }
+            },
+            order: {
+                id: 'DESC'
+            }
+        });
+    }
+    create(topic: Topic): Promise<Topic> {
         return this.repository.save(topic);
     }
-
-    async delete (id: number): Promise<void>{
+    async delete(id: number): Promise<void> {
         await this.repository.delete(id);
     }
-    async update (id: number, topic: Topic): Promise<Topic> {
+
+    async update(id: number, topic: Topic): Promise<Topic> {
 
         const found = await this.repository.findOneBy({id: id})
 
-        if (!found){
-            throw new ApplicationException('User not found', 404)
+        if (!found) {
+            throw new ApplicationException('Topic not found', 404)
         }
 
-        //Garante que o objeto subtituido terá o mesmo ID qda requisição
+        //Garante que o objeto substituido terá o mesmo ID da requisição
         topic.id = id;
 
         return this.repository.save(topic);
-        }
 
+    }
 }
