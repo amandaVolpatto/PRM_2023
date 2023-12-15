@@ -15,4 +15,13 @@ export interface ITopic {
     content: string;
     owner?: IUser;
     createdAt?: Date;
+    repost?: ITopic;
+    topic_id?: number;
+}
+export interface IComment {
+    id?: number;
+    content: string;
+    user?: IUser;
+    topic?:ITopic;
+    createdAt?: Date;
 }
